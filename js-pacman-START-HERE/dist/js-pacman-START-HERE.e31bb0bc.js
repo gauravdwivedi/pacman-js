@@ -299,8 +299,8 @@ var GameBoard = /*#__PURE__*/function () {
       this.dotCount = 0;
       this.grid = [];
       this.DOMGrid.innerHTML = "";
-      this.DOMGrid.style.cssText = "grid-template-columns:repeat(".concat(_setup.GRID_SIZE, "px, ").concat(_setup.CELL_SIZE, "px)");
-      level.forEach(function (square, i) {
+      this.DOMGrid.style.cssText = "grid-template-columns:repeat(".concat(_setup.GRID_SIZE, ", ").concat(_setup.CELL_SIZE, "px)");
+      level.forEach(function (square) {
         var div = document.createElement("div");
         div.classList.add("square", _setup.CLASS_LIST[square]);
         div.style.cssText = "width:".concat(_setup.CELL_SIZE, "px; height:").concat(_setup.CELL_SIZE, "px;");
@@ -517,7 +517,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60965" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49769" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

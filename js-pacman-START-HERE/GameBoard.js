@@ -6,7 +6,6 @@ class GameBoard {
     this.grid = [];
     this.DOMGrid = DOMGrid;
   }
-
   showGameStatus(gameWin) {
     const div = document.createElement("div");
     div.classList.add("game-status");
@@ -18,9 +17,9 @@ class GameBoard {
     this.dotCount = 0;
     this.grid = [];
     this.DOMGrid.innerHTML = "";
-    this.DOMGrid.style.cssText = `grid-template-columns:repeat(${GRID_SIZE}px, ${CELL_SIZE}px)`;
+    this.DOMGrid.style.cssText = `grid-template-columns:repeat(${GRID_SIZE}, ${CELL_SIZE}px)`;
 
-    level.forEach((square, i) => {
+    level.forEach((square) => {
       const div = document.createElement("div");
       div.classList.add("square", CLASS_LIST[square]);
       div.style.cssText = `width:${CELL_SIZE}px; height:${CELL_SIZE}px;`;
