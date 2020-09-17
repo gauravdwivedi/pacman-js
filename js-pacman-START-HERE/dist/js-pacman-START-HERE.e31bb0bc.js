@@ -299,7 +299,7 @@ var GameBoard = /*#__PURE__*/function () {
       this.dotCount = 0;
       this.grid = [];
       this.DOMGrid.innerHTML = "";
-      this.DOMGrid.style.cssText = "grid-template-columns:repeat(".concat(_setup.GRID_SIZE, ", ").concat(_setup.CELL_SIZE, "px)");
+      this.DOMGrid.style.cssText = "grid-template-columns:repeat(".concat(_setup.GRID_SIZE, "px, ").concat(_setup.CELL_SIZE, "px)");
       level.forEach(function (square, i) {
         var div = document.createElement("div");
         div.classList.add("square", _setup.CLASS_LIST[square]);
@@ -351,12 +351,103 @@ var GameBoard = /*#__PURE__*/function () {
 
 var _default = GameBoard;
 exports.default = _default;
-},{"@babel/runtime/helpers/toConsumableArray":"node_modules/@babel/runtime/helpers/toConsumableArray.js","@babel/runtime/helpers/classCallCheck":"node_modules/@babel/runtime/helpers/classCallCheck.js","@babel/runtime/helpers/createClass":"node_modules/@babel/runtime/helpers/createClass.js","./setup":"setup.js"}],"index.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/toConsumableArray":"node_modules/@babel/runtime/helpers/toConsumableArray.js","@babel/runtime/helpers/classCallCheck":"node_modules/@babel/runtime/helpers/classCallCheck.js","@babel/runtime/helpers/createClass":"node_modules/@babel/runtime/helpers/createClass.js","./setup":"setup.js"}],"Pacman.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+
+var _setup = require("./setup");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Pacman = /*#__PURE__*/function () {
+  function Pacman(speed, startPos) {
+    (0, _classCallCheck2.default)(this, Pacman);
+    this.pos = startPos;
+    this.speed = speed;
+    this.dir = null;
+    this.timer = 0;
+    this.powerPill = false;
+    this.rotation = true;
+  }
+
+  (0, _createClass2.default)(Pacman, [{
+    key: "shouldMove",
+    value: function shouldMove() {
+      if (!this.dir) return falsel;
+
+      if (this.timer === this.speed) {
+        this.timer = 0;
+        return true;
+      }
+
+      this.timer++;
+    }
+  }, {
+    key: "getNextMove",
+    value: function getNextMove(ObjectExist) {
+      var nextMovePos = this.pos + this.dir.movement;
+
+      if (ObjectExist(nextMovePos, _setup.OBJECT_TYPE.WALL) || ObjectExist(nextMovePos, _setup.OBJECT_TYPE.GHOSTLAIR)) {
+        nextMovePos = this.pos;
+      }
+
+      return {
+        nextMovePos: nextMovePos,
+        direction: this.dir
+      };
+    }
+  }, {
+    key: "makeMove",
+    value: function makeMove() {
+      var classesToRemove = [_setup.OBJECT_TYPE.PACMAN];
+      var classesToAdd = [_setup.OBJECT_TYPE.PACMAN];
+      return {
+        classesToRemove: classesToRemove,
+        classesToAdd: classesToAdd
+      };
+    }
+  }, {
+    key: "setNewPos",
+    value: function setNewPos(nextMovePos) {
+      this.pos = nextMovePos;
+    }
+  }, {
+    key: "handleKeyInput",
+    value: function handleKeyInput(e, objectExist) {
+      var dir;
+
+      if (e.keyCode >= 37 && e.keyCode <= 40) {
+        dir = _setup.DIRECTIONS[e.key];
+      } else {
+        return;
+      }
+
+      var nextMovePos = this.pos + dir.movement;
+      if (objectExist(nextMovePos, _setup.OBJECT_TYPE.WALL)) return;
+      this.dir = dir;
+    }
+  }]);
+  return Pacman;
+}();
+
+var _default = Pacman;
+exports.default = _default;
+},{"@babel/runtime/helpers/classCallCheck":"node_modules/@babel/runtime/helpers/classCallCheck.js","@babel/runtime/helpers/createClass":"node_modules/@babel/runtime/helpers/createClass.js","./setup":"setup.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
 var _setup = require("./setup");
 
 var _GameBoard = _interopRequireDefault(require("./GameBoard"));
+
+var _Pacman = _interopRequireDefault(require("./Pacman"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -385,8 +476,20 @@ function checkCollision(pacman, ghosts) {}
 
 function gameLoop(pacman, ghosts) {}
 
-function startGame() {}
-},{"./setup":"setup.js","./GameBoard":"GameBoard.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+function startGame() {
+  //reset some variables
+  gameWin = false;
+  powerPillActive = false;
+  score = 0;
+  startButton.classList.add("hide");
+  gameBoard.createGrid(_setup.LEVEL);
+  var pacman = new _Pacman.default(2, 287);
+  gameBoard.addObject(287, [_setup.OBJECT_TYPE.PACMAN]);
+} //Initialize game
+
+
+startButton.addEventListener("click", startGame);
+},{"./setup":"setup.js","./GameBoard":"GameBoard.js","./Pacman":"Pacman.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;

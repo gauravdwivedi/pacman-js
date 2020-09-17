@@ -18,7 +18,7 @@ class GameBoard {
     this.dotCount = 0;
     this.grid = [];
     this.DOMGrid.innerHTML = "";
-    this.DOMGrid.style.cssText = `grid-template-columns:repeat(${GRID_SIZE}, ${CELL_SIZE}px)`;
+    this.DOMGrid.style.cssText = `grid-template-columns:repeat(${GRID_SIZE}px, ${CELL_SIZE}px)`;
 
     level.forEach((square, i) => {
       const div = document.createElement("div");
