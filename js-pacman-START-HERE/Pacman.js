@@ -11,7 +11,7 @@ class Pacman {
   }
 
   shouldMove() {
-    if (!this.dir) return falsel;
+    if (!this.dir) return false;
 
     if (this.timer === this.speed) {
       this.timer = 0;

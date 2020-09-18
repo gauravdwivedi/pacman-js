@@ -49,7 +49,7 @@ class GameBoard {
   moveCharacter(character) {
     if (character.shouldMove()) {
       const { nextMovePos, direction } = character.getNextMove(
-        this.objectExist.bind(this)
+        this.objectExist
       );
 
       const { classesToRemove, classesToAdd } = character.makeMove();
