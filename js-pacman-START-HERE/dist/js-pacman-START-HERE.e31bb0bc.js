@@ -344,7 +344,7 @@ var GameBoard = /*#__PURE__*/function () {
       var div = document.createElement("div");
       div.classList.add("game-status");
       div.innerHTML = "".concat(gameWin ? "WIN" : "Game Over");
-      this.DOMGrid.appenChild(div);
+      this.DOMGrid.appendChild(div);
     }
   }, {
     key: "createGrid",
@@ -628,15 +628,46 @@ var gameWin = false;
 var powerPillActive = false;
 var powerPillTimer = null;
 
-function gameOver(pacman, grid) {}
+function gameOver(pacman, grid) {
+  document.removeEventListener("keydown", function (e) {
+    return pacman.handleKeyInput(e, gameBoard.objectExist);
+  });
+  gameBoard.showGameStatus(gameWin); //end the game loop
 
-function checkCollision(pacman, ghosts) {}
+  clearInterval(timer);
+  startButton.classList.remove("hide");
+}
+
+function checkCollision(pacman, ghosts) {
+  //which ghost calculate collided with
+  var collidedGhost = ghosts.find(function (ghost) {
+    return pacman.pos === ghost.pos;
+  });
+
+  if (collidedGhost) {
+    //if pacman eated powerpill, remove ghost
+    if (pacman.powerPill) {
+      gameBoard.removeObject(collidedGhost.pos, [_setup.OBJECT_TYPE.GHOST, _setup.OBJECT_TYPE.SCARED, collidedGhost.name]); //reset the pos on the ghost and add score
+
+      collidedGhost.pos = collidedGhost.startPos;
+      score += 100;
+    } else {
+      gameBoard.removeObject(pacman.pos, [_setup.OBJECT_TYPE.PACMAN]);
+      gameBoard.rotateDiv(pacman.pos, 0);
+      gameOver(pacman, gameGrid);
+    }
+  }
+}
 
 function gameLoop(pacman, ghosts) {
-  gameBoard.moveCharacter(pacman);
+  gameBoard.moveCharacter(pacman); //check collision after pacman movement
+
+  checkCollision(pacman, ghosts);
   ghosts.forEach(function (ghost) {
     return gameBoard.moveCharacter(ghost);
-  });
+  }); //check collision after ghost movement
+
+  checkCollision(pacman, ghosts);
 }
 
 function startGame() {
@@ -687,7 +718,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55406" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57062" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

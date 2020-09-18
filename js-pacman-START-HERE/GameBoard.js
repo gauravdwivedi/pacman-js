@@ -10,7 +10,7 @@ class GameBoard {
     const div = document.createElement("div");
     div.classList.add("game-status");
     div.innerHTML = `${gameWin ? "WIN" : "Game Over"}`;
-    this.DOMGrid.appenChild(div);
+    this.DOMGrid.appendChild(div);
   }
 
   createGrid(level) {

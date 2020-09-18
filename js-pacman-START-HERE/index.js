@@ -24,14 +24,52 @@ let gameWin = false;
 let powerPillActive = false;
 let powerPillTimer = null;
 
-function gameOver(pacman, grid) {}
+function gameOver(pacman, grid) {
+  document.removeEventListener("keydown", (e) =>
+    pacman.handleKeyInput(e, gameBoard.objectExist)
+  );
 
-function checkCollision(pacman, ghosts) {}
+  gameBoard.showGameStatus(gameWin);
+
+  //end the game loop
+  clearInterval(timer);
+
+  startButton.classList.remove("hide");
+}
+
+function checkCollision(pacman, ghosts) {
+  //which ghost calculate collided with
+  const collidedGhost = ghosts.find((ghost) => pacman.pos === ghost.pos);
+
+  if (collidedGhost) {
+    //if pacman eated powerpill, remove ghost
+    if (pacman.powerPill) {
+      gameBoard.removeObject(collidedGhost.pos, [
+        OBJECT_TYPE.GHOST,
+        OBJECT_TYPE.SCARED,
+        collidedGhost.name,
+      ]);
+
+      //reset the pos on the ghost and add score
+      collidedGhost.pos = collidedGhost.startPos;
+      score += 100;
+    } else {
+      gameBoard.removeObject(pacman.pos, [OBJECT_TYPE.PACMAN]);
+
+      gameBoard.rotateDiv(pacman.pos, 0);
+      gameOver(pacman, gameGrid);
+    }
+  }
+}
 
 function gameLoop(pacman, ghosts) {
   gameBoard.moveCharacter(pacman);
+  //check collision after pacman movement
+  checkCollision(pacman, ghosts);
 
   ghosts.forEach((ghost) => gameBoard.moveCharacter(ghost));
+  //check collision after ghost movement
+  checkCollision(pacman, ghosts);
 }
 
 function startGame() {
